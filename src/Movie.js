@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './Movie.css';
@@ -46,10 +47,12 @@ function Movie({ title, poster }) {
 function MoviePoster({ poster }) {
   return <img src={poster} alt="Movie Poster" />;
 }
+
 Movie.propTypes = {
   title: PropTypes.string.isRequired,
   poster: PropTypes.string.isRequired
 };
+
 MoviePoster.propTypes = {
   poster: PropTypes.string.isRequired
 };

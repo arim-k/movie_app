@@ -38,7 +38,7 @@ import Movie from './Movie';
 
 class App extends Component {
   // component livecycle is Order
-  // Render: componentWillMount() -> render() -> compoentdidmount()
+  // Render: componentWillMount() -> render() -> componentDidMount()
   // Update: componentWillReceiveProps() -> shouldComponentUpdate() == true -> componentWillUpdate() -> render() -> componentDidUpdate()
 
   // state: 컴포넌트 안에 있는 오브젝트, state가 바뀔 때마다, 렌더 발생
@@ -94,41 +94,13 @@ class App extends Component {
   //     });
   //     console.log('asdf');
   //   }, 2000);
-  // }
+	// }
+	
   state = {};
 
   componentDidMount() {
-    setTimeout(() => {
-      this.setState({
-        movies: [
-          {
-            title: 'Matrix',
-            poster:
-              'https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SY1000_CR0,0,665,1000_AL_.jpg'
-          },
-          {
-            title: 'Full Metal Jacket',
-            poster:
-              'https://pics.filmaffinity.com/Nacido_para_matar-577943737-large.jpg'
-          },
-          {
-            title: 'Oldboy',
-            poster:
-              'https://upload.wikimedia.org/wikipedia/en/thumb/6/67/Oldboykoreanposter.jpg/220px-Oldboykoreanposter.jpg'
-          },
-          {
-            title: 'Star Wars',
-            poster:
-              'https://imgix.ranker.com/user_node_img/50076/1001511915/original/the-very-first-_star-war_-poster-photo-u1?w=650&q=50&fm=jpg&fit=crop&crop=faces'
-          },
-          {
-            title: 'Transpotting',
-            poster: 'http://media.tumblr.com/tumblr_ln4tv7uzKx1qhqg0d.jpg'
-          }
-        ]
-      });
-    }, 2000);
-    console.log('didmount!!!');
+		this._getMovies();
+    console.log('did mount!!!');
   }
 
   _renderMovies = () => {
@@ -137,7 +109,21 @@ class App extends Component {
       return <Movie title={movie.title} poster={movie.poster} key={index} />;
     });
     return movies;
-  };
+	};
+	
+	_getMovies = async () => {
+		const movies = await this._callApi();
+		this.setState({
+			movies
+		})
+	}
+
+	_callApi = () => {
+		fetch(`https://yts.am/api/v2/list_movies.json?sort_by=rating`) 
+		.then(response => response.json()) // json으로 변환
+		.then(json => json.data.movies) // 콘솔에서 json 확인
+		.catch(err => console.log(err))
+	}
 
   render() {
     console.log('did render');
