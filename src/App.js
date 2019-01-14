@@ -94,42 +94,52 @@ class App extends Component {
   //     });
   //     console.log('asdf');
   //   }, 2000);
-	// }
-	
+  // }
+
   state = {};
 
   componentDidMount() {
-		this._getMovies();
-    console.log('did mount!!!');
+    this._getMovies();
   }
 
   _renderMovies = () => {
     // 변수 movies에 데이터 저장
-    const movies = this.state.movies.map((movie, index) => {
-      return <Movie title={movie.title} poster={movie.poster} key={index} />;
+    const movies = this.state.movies.map(movie => {
+      //console.log(movie);
+      return (
+        <Movie
+          title={movie.title_english}
+          poster={movie.medium_cover_image}
+          key={movie.id}
+          genres={movie.genres}
+          synopsis={movie.synopsis}
+        />
+      );
     });
     return movies;
-	};
-	
-	_getMovies = async () => {
-		const movies = await this._callApi();
-		this.setState({
-			movies
-		})
-	}
+  };
 
-	_callApi = () => {
-		fetch(`https://yts.am/api/v2/list_movies.json?sort_by=rating`) 
-		.then(response => response.json()) // json으로 변환
-		.then(json => json.data.movies) // 콘솔에서 json 확인
-		.catch(err => console.log(err))
-	}
+  _getMovies = async () => {
+    const movies = await this._callApi();
+    this.setState({
+      movies
+    });
+  };
+
+  _callApi = () => {
+    return fetch(
+      'https://yts.am/api/v2/list_movies.json?sort_by=download_count'
+    )
+      .then(response => response.json()) // json으로 변환
+      .then(json => json.data.movies)
+      .catch(err => console.log(err));
+  };
 
   render() {
-    console.log('did render');
+    const { movies } = this.state;
     return (
-      <div className="App">
-        {this.state.movies ? this._renderMovies() : 'Loading'}
+      <div className={movies ? 'App' : 'App--loading'}>
+        {movies ? this._renderMovies() : 'Loading'}
         {/* {this.state.greeting} */}
         {/* Movie 컴포넌트는 title 가지고 있음 */}
         {/* <Movie title={movieTitles[0]} poster={movieImages[0]} />
